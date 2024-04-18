@@ -247,18 +247,33 @@ function createQuestionCard(question){
     //Step 3A: Create the header of the card
     console.log(question);
     //create a header (div element) with class card-header
+    let questionHeader = document.createElement('div')
+    questionHeader.classList.add('card-header')
 
     //create an title (h5 element) with the class card-title
     //the title should say the question
+    let questionTitle = document.createElement('h5')
+    questionTitle.classList.add('card-title')
+    questionTitle.textContent = `${question.question}`
+
 
 
     //create a subtitle (p element) with the class card-subtitle
     //the subtitle should say the category of the question
+    let questionSubtitle = document.createElement('p')
+    questionSubtitle.classList.add('card-subtitle')
+    questionSubtitle.textContent = `${question.category}`
+
 
 
     //append the cardTitle and subtitle to the cardHeader
+    questionHeader.appendChild(questionTitle)
+    questionHeader.appendChild(questionSubtitle)
 
     //append the cardHeader to the questionCard
+    questionCard.appendChild(questionHeader)
+
+
 
     /*********** HEADER END ************* */
 
@@ -279,6 +294,12 @@ function createQuestionCard(question){
 
     //Part 3B: 
     //for each incorrect answer, make an input with type radio and class form-check input, call the function createFormCheckInput
+    for (let index = 0; index < (question.incorrect_answers).length; index ++){
+        let incorrectAnswerFormCheck = createFormCheckInput(question, isCorrect, answerValue)
+
+        cardBody.appendChild(incorrectAnswerFormCheck);
+
+    }
     
 
     //append the cardBody to the form
@@ -327,18 +348,25 @@ function createQuestionCard(question){
  */
 async function getQuestions(){
     console.log("Fetching questions from the API");
-    const baseURL = 'https://opentdb.com/api.php?amount=4&category=11';
+    const baseURL = 'https://opentdb.com/api.php?';
     
     //Step 1: get the user input (number of questions to get)
     //get the number of questions to fetch from the user input
+    let numberOfQuestionsInput = document.querySelector('#numberOfQuestions');
 
+
+    console.log(numberOfQuestionsInput.value)
     //update the totalQuestions variable
+    totalQuestions = numberOfQuestionsInput.value
+    numQuestionsString = `amount=${totalQuestions}`
 
     //Step 2: get the user input (category)
-
+    let userInputCategory = document.querySelector('#categorySelect');
+    userCategory = userInputCategory.value
+    userCategoryString = `category=${userCategory}`
 
     //build the full URL
-    const fullURL = `${baseURL}`;
+    const fullURL = ` ${baseURL}${numQuestionsString}&${userCategoryString}`;
     console.log("Full URL: ", fullURL);
     //make the fetch request
     const response = await fetch(fullURL);
